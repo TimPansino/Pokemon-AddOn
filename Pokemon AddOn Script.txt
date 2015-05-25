@@ -1,0 +1,422 @@
+/*****************************************
+**         Gaironxero's Pokemon         **
+**            Add On Scripts            **
+*****************************************/
+
+/*************************************************************************
+* This Add On was made for the /r/PokemonTrades subreddit community.     *
+* The Add On is meant to mmake creating complex and helpful trading      *
+* spreadsheets simple and easy. It includes powerful functions,          *
+* autofilling buttons, as well as convenient buttons loaded with         *
+* common images and formulas. Check out my own trade spreadsheet example *
+* to see how the functions can simplify your spreadsheet, or simply      *
+* use my template and create your own spreadsheet from scratch.          *
+*************************************************************************/
+
+/*****************************************************************************
+* I would like to say thank you to TobiObito for the use of his Hidden Power *
+* Type calculator, and to the entire community for being so friendly.        *
+*****************************************************************************/
+
+//Main Menu
+function onOpen(e) {
+  var ui = SpreadsheetApp.getUi()
+  ui.createMenu('Pokemon')
+    .addItem('Pokemon Sprites', 'getPokemonSpriteButton')
+    .addItem('Pokemon Name', 'getPokemonNameButton')
+    .addItem('Pokemon Dex Number', 'getPokemonNumberButton')
+    .addSubMenu(ui.createMenu('Pokeball Sprites')
+      .addSubMenu(ui.createMenu('?-G')
+        .addItem('? Ball Filler', 'getQuestionball')
+        .addItem('Cherish Ball', 'getCherishball')
+        .addItem('Dive Ball', 'getDiveball')
+        .addItem('Dream Ball', 'getDreamball')
+        .addItem('Dusk Ball', 'getDuskball')
+        .addItem('Fast Ball', 'getFastball')
+        .addItem('Friend Ball', 'getFriendball')
+        .addItem('Great Ball', 'getGreatball'))
+      .addSubMenu(ui.createMenu('H-M')
+        .addItem('Heal Ball', 'getHealball')
+        .addItem('Heavy Ball', 'getHeavyball')
+        .addItem('Level Ball', 'getLevelball')
+        .addItem('Love Ball', 'getLoveball')
+        .addItem('Lure Ball', 'getLureball')
+        .addItem('Luxury Ball', 'getLuxuryball')
+        .addItem('Master Ball', 'getMasterball')
+        .addItem('Moon Ball', 'getMoonball'))
+      .addSubMenu(ui.createMenu('N-U')
+        .addItem('Nest Ball', 'getNestball')
+        .addItem('Net Ball', 'getNetball')
+        .addItem('Poke Ball', 'getPokeball')
+        .addItem('Premier Ball', 'getPremierball')
+        .addItem('Quick Ball', 'getQuickball')
+        .addItem('Repeat Ball', 'getRepeatball')
+        .addItem('Safari Ball', 'getSafariball')
+        .addItem('Sport Ball', 'getSportball')
+        .addItem('Timer Ball', 'getTimerball')
+        .addItem('Ultra Ball', 'getUltraball')))
+    .addItem('Shiny Star Sprite', 'getShinyStarButton')
+    .addSubMenu(ui.createMenu('IV Autofill')
+      .addItem('Physical Attacker', 'physicalIVs')
+      .addItem('Special Attacker', 'specialIVs')
+      .addItem('Mixed Attacker', 'mixedIVs')
+      .addSeparator()
+      .addItem('Physical Attacker [0 Spe]', 'physical0speIVs')
+      .addItem('Special Attacker [0 Spe]', 'special0speIVs')
+      .addItem('Mixed Attacker [0 Spe]', 'mixed0speIVs'))
+    .addItem('Hidden Power Type', 'getHiddenPowerButton')
+    .addItem('Hatch Thread Link', 'hatchThread')
+    .addSeparator()
+    .addItem('Help', 'help')
+    .addToUi();
+}
+
+//Main Sprite Function
+function getPokemonSprite(dex,shiny) {
+  var spreadsheet = SpreadsheetApp.getActive();
+  var url
+  url = "";
+  
+  //If shiny is not updated
+  if (shiny == "[Shiny?]") {
+    shiny = 0;
+  }
+  
+  //Leaves cell blank if no dex # is given
+  if (dex !== "" && dex >= 0) {
+    
+    //Convert Dex to 00# or 0## for numbers <100
+    dex = getDexString(dex);
+
+    //Fixing Optional Parameter
+    if (shiny === undefined) {
+      shiny = "0"
+    }
+
+    if (typeof shiny == "string")
+      shiny = shiny.toLowerCase();
+    if (dex == "000") {
+      //??? Sprite
+      url = "http://cdn.bulbagarden.net/upload/8/8e/Spr_3r_000.png";
+    }
+    else if (shiny != "" && shiny != "no" && shiny != "n" && shiny != "0") {
+      //Shiny Sprite URL
+      url = url.concat("http://www.serebii.net/Shiny/XY/",dex,".png");
+    }
+    else {
+      //Non Shiny Sprite URL
+      url = url.concat("http://www.serebii.net/xy/pokemon/",dex,".png");
+    }
+    return url
+  }
+}
+
+//Convert Dex to 00# or 0## for numbers <100
+function getDexString(a) {
+  var str
+  str = "";
+  if (a < 10) {
+    str = str.concat("00",a);
+  }
+  else if (a < 100 && a >= 10) {
+    str = str.concat("0",a);
+  }
+  else if (a >= 100) {
+    str = str.concat(a);
+  }
+  return str
+}
+
+//Changes a string to hasing only the first letter capitalized
+function Capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+//Retrieves a Pokemon Name fromt the Pokedex
+function getPokemonName(dex) {
+  if (dex == "Dex#") {
+    return "###"
+  }
+  if (dex !== "") {
+    return Pokedex[dex]
+  }
+}
+
+//Retrieves the Dex number for a Pokemon by name
+function getPokemonNumber(name) {
+  if (name == "Name") {
+    return "###"
+  }
+  if (name !== ""){
+    name = name.toLowerCase();
+    name = Capitalize(name);
+    dex = Pokedex.indexOf(name);
+    if (dex == -1) {
+      dex = 0;
+    }
+    return dex
+  }
+}
+
+//Easy Hyperlinking Autofill
+function hatchThread() {
+  set('=HYPERLINK("https://www.reddit.com/r/SVExchange/","OT Trainer")')
+}
+
+//Shiny Star Image URL
+function getShinyStar() {
+  return "http://cdn.bulbagarden.net/upload/2/27/ShinyVIStar.png"
+}
+
+//Formula Box Set (Simplified)
+function set(formula) {
+  var range = SpreadsheetApp.getActiveRange();
+  range.setFormula(formula)
+}
+
+//IV Autofill Button Functionality
+function physicalIVs() {
+  setIVs(["31","31","31",'"x"',"31","31"])
+}
+
+function specialIVs() {
+  setIVs(["31",'"x"',"31","31","31","31"])
+}
+
+function mixedIVs() {
+  setIVs(["31","31","31","31","31","31"])
+}
+
+function physical0speIVs() {
+  setIVs(["31","31","31",'"x"',"31","0"])
+}
+
+function special0speIVs() {
+  setIVs(["31",'"x"',"31","31","31","0"])
+}
+
+function mixed0speIVs() {
+  setIVs(["31","31","31","31","31","0"])
+}
+
+//IV setting function
+function setIVs(ivs) {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var range = SpreadsheetApp.getActiveRange();
+  var len = lengtharray(range);
+  
+  //Adjusting for incorrectly sized ranges.
+  if (len[1] != 6) {
+    range = changeRange(sheet, range, len[0]);
+    len = lengtharray(range);
+  }
+
+  //Fills in range properly.
+  for (r=0; r<len[0]; r++) {
+    for (c=0; c<len[1]; c++) {
+      range.getCell((r+1),(c+1)).setFormula(ivs[c])
+    }
+  }
+}
+
+function changeRange(sheet, range, numRows) {
+  range = sheet.getRange(range.getRow(), range.getColumn(), numRows, 6);
+  range.activate()
+  return range
+}
+
+//Gives size of a range in a 1x2 array. [row, col]
+function lengtharray(range) {
+  return [(1 + range.getLastRow() - range.getRow()), (1 + range.getLastColumn() - range.getColumn())]
+}
+
+//Pokeball Sprite Buttons
+function getPokemonSpriteButton() {
+  set('=image(getPokemonSprite("Dex#","[Shiny?]"))')
+}
+
+function getShinyStarButton() {
+  set("=image(getShinyStar(),3)")
+}
+
+function getHiddenPowerButton() {
+  set('=getHiddenPowerType("HP","ATK","DEF","SPA","SPD","SPE")')
+}
+
+function getPokemonNumberButton() {
+  set('=getPokemonNumber("Name")')
+}
+
+function getPokemonNameButton() {
+  set('=getPokemonName("Dex#")')
+}
+
+function getQuestionball() {
+  set('=image("http://cdn.bulbagarden.net/upload/8/8e/Spr_3r_000.png")')
+}
+
+function getPokeball() {
+  set('=image("http://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png")')
+}
+
+function getGreatball() {
+  set('=image("http://i.imgur.com/ILqnCfB.png")')
+}
+
+function getUltraball() {
+  set('=image("http://i.imgur.com/9IW0GoZ.png")')
+}
+
+function getMasterball() {
+  set('=image("http://i.imgur.com/3CjYcFJ.png")')
+}
+
+function getCherishball() {
+  set('=image("http://i.imgur.com/s2USNQP.png")')
+}
+
+function getQuickball() {
+  set('=image("http://i.imgur.com/KrOlzBn.png")')
+}
+
+function getLuxuryball() {
+  set('=image("http://i.imgur.com/jYicpQS.png")')
+}
+
+function getTimerball() {
+  set('=image("http://i.imgur.com/E1zYB5j.png")')
+}
+
+function getPremierball() {
+  set('=image("http://i.imgur.com/aCHGRgc.png")')
+}
+
+function getDuskball() {
+  set('=image("http://i.imgur.com/lnhlcPn.png")')
+}
+
+function getDiveball() {
+  set('=image("http://i.imgur.com/CgUX386.png")')
+}
+
+function getHealball() {
+  set('=image("http://i.imgur.com/shGpq0k.png")')
+}
+
+function getFastball() {
+  set('=image("http://i.imgur.com/HNOW45Z.png")')
+}
+
+function getSafariball() {
+  set('=image("http://i.imgur.com/Ke73CtU.png")')
+}
+
+function getNestball() {
+  set('=image("http://i.imgur.com/DQXVclo.png")')
+}
+
+function getRepeatball() {
+  set('=image("http://i.imgur.com/dU55qU0.png")')
+}
+
+function getDreamball() {
+  set('=image("http://i.imgur.com/amI3uAq.png")')
+}
+
+function getHeavyball() {
+  set('=image("http://i.imgur.com/39SaWgc.png")')
+}
+
+function getLevelball() {
+  set('=image("http://i.imgur.com/9OGxy2K.png")')
+}
+
+function getLoveball() {
+  set('=image("http://i.imgur.com/EwzaKt8.png")')
+}
+
+function getLureball() {
+  set('=image("http://i.imgur.com/0ka2Blx.png")')
+}
+
+function getMoonball() {
+  set('=image("http://i.imgur.com/czYtr01.png")')
+}
+
+function getFriendball() {
+  set('=image("http://i.imgur.com/2GAhMXw.png")')
+}
+
+function getNetball() {
+  set('=image("http://i.imgur.com/XTwxhp1.png")')
+}
+
+function getSportball() {
+  set('=image("https://0efcc2d9-a-62cb3a1a-s-sites.googlegroups.com/site/pokemonjunk/home/SportsBall.png")')
+}
+
+//Pokedex in Array form
+var Pokedex = ["???","Bulbasaur","Ivysaur","Venusaur","Charmander","Charmeleon","Charizard","Squirtle","Wartortle","Blastoise","Caterpie","Metapod","Butterfree","Weedle","Kakuna","Beedrill","Pidgey","Pidgeotto","Pidgeot","Rattata","Raticate","Spearow","Fearow","Ekans","Arbok","Pikachu","Raichu","Sandshrew","Sandslash","Nidoran♀","Nidorina","Nidoqueen","Nidoran♂","Nidorino","Nidoking","Clefairy","Clefable","Vulpix","Ninetales","Jigglypuff","Wigglytuff","Zubat","Golbat","Oddish","Gloom","Vileplume","Paras","Parasect","Venonat","Venomoth","Diglett","Dugtrio","Meowth","Persian","Psyduck","Golduck","Mankey","Primeape","Growlithe","Arcanine","Poliwag","Poliwhirl","Poliwrath","Abra","Kadabra","Alakazam","Machop","Machoke","Machamp","Bellsprout","Weepinbell","Victreebel","Tentacool","Tentacruel","Geodude","Graveler","Golem","Ponyta","Rapidash","Slowpoke","Slowbro","Magnemite","Magneton","Farfetch'd","Doduo","Dodrio","Seel","Dewgong","Grimer","Muk","Shellder","Cloyster","Gastly","Haunter","Gengar","Onix","Drowzee","Hypno","Krabby","Kingler","Voltorb","Electrode","Exeggcute","Exeggutor","Cubone","Marowak","Hitmonlee","Hitmonchan","Lickitung","Koffing","Weezing","Rhyhorn","Rhydon","Chansey","Tangela","Kangaskhan","Horsea","Seadra","Goldeen","Seaking","Staryu","Starmie","Mr. Mime","Scyther","Jynx","Electabuzz","Magmar","Pinsir","Tauros","Magikarp","Gyarados","Lapras","Ditto","Eevee","Vaporeon","Jolteon","Flareon","Porygon","Omanyte","Omastar","Kabuto","Kabutops","Aerodactyl","Snorlax","Articuno","Zapdos","Moltres","Dratini","Dragonair","Dragonite","Mewtwo","Mew","Chikorita","Bayleef","Meganium","Cyndaquil","Quilava","Typhlosion","Totodile","Croconaw","Feraligatr","Sentret","Furret","Hoothoot","Noctowl","Ledyba","Ledian","Spinarak","Ariados","Crobat","Chinchou","Lanturn","Pichu","Cleffa","Igglybuff","Togepi","Togetic","Natu","Xatu","Mareep","Flaaffy","Ampharos","Bellossom","Marill","Azumarill","Sudowoodo","Politoed","Hoppip","Skiploom","Jumpluff","Aipom","Sunkern","Sunflora","Yanma","Wooper","Quagsire","Espeon","Umbreon","Murkrow","Slowking","Misdreavus","Unown","Wobbuffet","Girafarig","Pineco","Forretress","Dunsparce","Gligar","Steelix","Snubbull","Granbull","Qwilfish","Scizor","Shuckle","Heracross","Sneasel","Teddiursa","Ursaring","Slugma","Magcargo","Swinub","Piloswine","Corsola","Remoraid","Octillery","Delibird","Mantine","Skarmory","Houndour","Houndoom","Kingdra","Phanpy","Donphan","Porygon2","Stantler","Smeargle","Tyrogue","Hitmontop","Smoochum","Elekid","Magby","Miltank","Blissey","Raikou","Entei","Suicune","Larvitar","Pupitar","Tyranitar","Lugia","Ho-Oh","Celebi","Treecko","Grovyle","Sceptile","Torchic","Combusken","Blaziken","Mudkip","Marshtomp","Swampert","Poochyena","Mightyena","Zigzagoon","Linoone","Wurmple","Silcoon","Beautifly","Cascoon","Dustox","Lotad","Lombre","Ludicolo","Seedot","Nuzleaf","Shiftry","Taillow","Swellow","Wingull","Pelipper","Ralts","Kirlia","Gardevoir","Surskit","Masquerain","Shroomish","Breloom","Slakoth","Vigoroth","Slaking","Nincada","Ninjask","Shedinja","Whismur","Loudred","Exploud","Makuhita","Hariyama","Azurill","Nosepass","Skitty","Delcatty","Sableye","Mawile","Aron","Lairon","Aggron","Meditite","Medicham","Electrike","Manectric","Plusle","Minun","Volbeat","Illumise","Roselia","Gulpin","Swalot","Carvanha","Sharpedo","Wailmer","Wailord","Numel","Camerupt","Torkoal","Spoink","Grumpig","Spinda","Trapinch","Vibrava","Flygon","Cacnea","Cacturne","Swablu","Altaria","Zangoose","Seviper","Lunatone","Solrock","Barboach","Whiscash","Corphish","Crawdaunt","Baltoy","Claydol","Lileep","Cradily","Anorith","Armaldo","Feebas","Milotic","Castform","Kecleon","Shuppet","Banette","Duskull","Dusclops","Tropius","Chimecho","Absol","Wynaut","Snorunt","Glalie","Spheal","Sealeo","Walrein","Clamperl","Huntail","Gorebyss","Relicanth","Luvdisc","Bagon","Shelgon","Salamence","Beldum","Metang","Metagross","Regirock","Regice","Registeel","Latias","Latios","Kyogre","Groudon","Rayquaza","Jirachi","Deoxys","Turtwig","Grotle","Torterra","Chimchar","Monferno","Infernape","Piplup","Prinplup","Empoleon","Starly","Staravia","Staraptor","Bidoof","Bibarel","Kricketot","Kricketune","Shinx","Luxio","Luxray","Budew","Roserade","Cranidos","Rampardos","Shieldon","Bastiodon","Burmy","Wormadam","Mothim","Combee","Vespiquen","Pachirisu","Buizel","Floatzel","Cherubi","Cherrim","Shellos","Gastrodon","Ambipom","Drifloon","Drifblim","Buneary","Lopunny","Mismagius","Honchkrow","Glameow","Purugly","Chingling","Stunky","Skuntank","Bronzor","Bronzong","Bonsly","Mime Jr.","Happiny","Chatot","Spiritomb","Gible","Gabite","Garchomp","Munchlax","Riolu","Lucario","Hippopotas","Hippowdon","Skorupi","Drapion","Croagunk","Toxicroak","Carnivine","Finneon","Lumineon","Mantyke","Snover","Abomasnow","Weavile","Magnezone","Lickilicky","Rhyperior","Tangrowth","Electivire","Magmortar","Togekiss","Yanmega","Leafeon","Glaceon","Gliscor","Mamoswine","Porygon-Z","Gallade","Probopass","Dusknoir","Froslass","Rotom","Uxie","Mesprit","Azelf","Dialga","Palkia","Heatran","Regigigas","Giratina","Cresselia","Phione","Manaphy","Darkrai","Shaymin","Arceus","Victini","Snivy","Servine","Serperior","Tepig","Pignite","Emboar","Oshawott","Dewott","Samurott","Patrat","Watchog","Lillipup","Herdier","Stoutland","Purrloin","Liepard","Pansage","Simisage","Pansear","Simisear","Panpour","Simipour","Munna","Musharna","Pidove","Tranquill","Unfezant","Blitzle","Zebstrika","Roggenrola","Boldore","Gigalith","Woobat","Swoobat","Drilbur","Excadrill","Audino","Timburr","Gurdurr","Conkeldurr","Tympole","Palpitoad","Seismitoad","Throh","Sawk","Sewaddle","Swadloon","Leavanny","Venipede","Whirlipede","Scolipede","Cottonee","Whimsicott","Petilil","Lilligant","Basculin","Sandile","Krokorok","Krookodile","Darumaka","Darmanitan","Maractus","Dwebble","Crustle","Scraggy","Scrafty","Sigilyph","Yamask","Cofagrigus","Tirtouga","Carracosta","Archen","Archeops","Trubbish","Garbodor","Zorua","Zoroark","Minccino","Cinccino","Gothita","Gothorita","Gothitelle","Solosis","Duosion","Reuniclus","Ducklett","Swanna","Vanillite","Vanillish","Vanilluxe","Deerling","Sawsbuck","Emolga","Karrablast","Escavalier","Foongus","Amoonguss","Frillish","Jellicent","Alomomola","Joltik","Galvantula","Ferroseed","Ferrothorn","Klink","Klang","Klinklang","Tynamo","Eelektrik","Eelektross","Elgyem","Beheeyem","Litwick","Lampent","Chandelure","Axew","Fraxure","Haxorus","Cubchoo","Beartic","Cryogonal","Shelmet","Accelgor","Stunfisk","Mienfoo","Mienshao","Druddigon","Golett","Golurk","Pawniard","Bisharp","Bouffalant","Rufflet","Braviary","Vullaby","Mandibuzz","Heatmor","Durant","Deino","Zweilous","Hydreigon","Larvesta","Volcarona","Cobalion","Terrakion","Virizion","Tornadus","Thundurus","Reshiram","Zekrom","Landorus","Kyurem","Keldeo","Meloetta","Genesect","Chespin","Quilladin","Chesnaught","Fennekin","Braixen","Delphox","Froakie","Frogadier","Greninja","Bunnelby","Diggersby","Fletchling","Fletchinder","Talonflame","Scatterbug","Spewpa","Vivillon","Litleo","Pyroar","Flabébé","Floette","Florges","Skiddo","Gogoat","Pancham","Pangoro","Furfrou","Espurr","Meowstic","Honedge","Doublade","Aegislash","Spritzee","Aromatisse","Swirlix","Slurpuff","Inkay","Malamar","Binacle","Barbaracle","Skrelp","Dragalge","Clauncher","Clawitzer","Helioptile","Heliolisk","Tyrunt","Tyrantrum","Amaura","Aurorus","Sylveon","Hawlucha","Dedenne","Carbink","Goomy","Sliggoo","Goodra","Klefki","Phantump","Trevenant","Pumpkaboo","Gourgeist","Bergmite","Avalugg","Noibat","Noivern","Xerneas","Yveltal","Zygarde","Diancie","Hoopa","Volcanion"];
+
+/*****************************************************************
+* Original Source from TobiObito has been partially modified and 
+* edited for use in this project, all credit for the Hidden Power 
+* functionality goes to him for his excellent original work.
+*****************************************************************/
+
+/***********************************
+*           TobiObito's            *
+*      Pokemon Trades Scripts      *
+***********************************/
+
+// >>>>>>>>>>>>>>>>>>>> Hidden Power Functions <<<<<<<<<<<<<<<<<<<
+var HPType = ['Fighting', 'Flying', 'Poison', 'Ground', 'Rock', 'Bug', 'Ghost', 'Steel', 'Fire', 'Water', 'Grass', 'Electric', 'Psychic', 'Ice', 'Dragon', 'Dark'];
+
+// a To f to follow Bulbapedia formating
+// Function to get the HP Typing
+function getHiddenPowerType(a, b, c, e, f, d){
+  if (a == "HP" || b == "ATK" || c == "DEF" || d == "SPA" || e == "SPD" || f == "SPE") {
+    return "###"
+  }
+  var HPValue
+  
+    // Checks for odds and evens
+  a = getTypeValue(a);
+  b = getTypeValue(b);
+  c = getTypeValue(c);
+  d = getTypeValue(d);
+  e = getTypeValue(e);
+  f = getTypeValue(f);
+
+  if (a != -1 && b != -1 && c != -1 && d != -1 && e != -1 && f != -1) {
+    // Gets HP Value
+    HPValue = Math.floor(((a+2*b+4*c+8*d+16*e+32*f)*15)/63);
+
+    // Displays Proper HP Type
+    return HPType[HPValue]
+  }
+}
+
+// Needed for Hidden Power Typing Function
+function getTypeValue(value){
+  if (typeof value == "string") {
+    value = value.toLowerCase();
+    if (value == "x") {
+      return -1
+    }
+    else if (value == "e" || value == "even") {
+      return 0;
+    }
+    else if (value == "o" || value == "odd") {
+      return 1;
+    }
+  }
+  else {
+    if (value >= 0 && value <= 31)
+      if (value%2 == 0 || value == 0)
+        return 0;
+      else
+        return 1;
+    }
+}
+
