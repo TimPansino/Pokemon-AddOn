@@ -5,7 +5,7 @@
 
 /*************************************************************************
 * This Add On was made for the /r/PokemonTrades subreddit community.     *
-* The Add On is meant to mmake creating complex and helpful trading      *
+* The Add On is meant to make creating complex and helpful trading      *
 * spreadsheets simple and easy. It includes powerful functions,          *
 * autofilling buttons, as well as convenient buttons loaded with         *
 * common images and formulas. Check out my own trade spreadsheet example *
