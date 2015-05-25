@@ -252,7 +252,7 @@ function getPokemonNameButton() {
 }
 
 function getQuestionball() {
-  set('=image("http://cdn.bulbagarden.net/upload/8/8e/Spr_3r_000.png")')
+  set('=image("http://fc03.deviantart.net/fs70/i/2011/068/a/c/pokeball_desktop_icon_by_beccerberry-d3b98cf.png")')
 }
 
 function getPokeball() {
