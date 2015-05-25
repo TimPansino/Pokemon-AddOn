@@ -3,6 +3,11 @@
 **            Add On Scripts            **
 *****************************************/
 
+***************************
+**    Reddit Post Here   **
+** http://redd.it/367spe ** 
+***************************
+
 /*************************************************************************
 * This Add On was made for the /r/PokemonTrades subreddit community.     *
 * The Add On is meant to make creating complex and helpful trading      *
@@ -67,7 +72,7 @@ function onOpen(e) {
     .addItem('Hidden Power Type', 'getHiddenPowerButton')
     .addItem('Hatch Thread Link', 'hatchThread')
     .addSeparator()
-    .addItem('Help', 'help')
+    .addItem('Help', 'helpDialogue')
     .addToUi();
 }
 
@@ -163,11 +168,6 @@ function hatchThread() {
   set('=HYPERLINK("https://www.reddit.com/r/SVExchange/","OT Trainer")')
 }
 
-//Shiny Star Image URL
-function getShinyStar() {
-  return "http://cdn.bulbagarden.net/upload/2/27/ShinyVIStar.png"
-}
-
 //Formula Box Set (Simplified)
 function set(formula) {
   var range = SpreadsheetApp.getActiveRange();
@@ -236,7 +236,7 @@ function getPokemonSpriteButton() {
 }
 
 function getShinyStarButton() {
-  set("=image(getShinyStar(),3)")
+  set('=image("http://cdn.bulbagarden.net/upload/2/27/ShinyVIStar.png",3)')
 }
 
 function getHiddenPowerButton() {
@@ -418,5 +418,13 @@ function getTypeValue(value){
       else
         return 1;
     }
+}
+
+function helpDialogue() {
+  var ui = SpreadsheetApp.getUi(); // Same variations.
+  var result = ui.alert(
+     'Pokemon AddOn Help',
+     'For usage help or updates please visit my GitHub page at \nhttps://github.com/tpansin/Pokemon-AddOn \nOr check out the reddit post for this at \nhttp://redd.it/367spe',
+      ui.ButtonSet.OK);
 }
 
