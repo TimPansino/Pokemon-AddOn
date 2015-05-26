@@ -10,7 +10,7 @@
 
 /*************************************************************************
 * This Add On was made for the /r/PokemonTrades subreddit community.     *
-* The Add On is meant to make creating complex and helpful trading      *
+* The Add On is meant to make creating complex and helpful trading       *
 * spreadsheets simple and easy. It includes powerful functions,          *
 * autofilling buttons, as well as convenient buttons loaded with         *
 * common images and formulas. Check out my own trade spreadsheet example *
@@ -76,34 +76,47 @@ function onOpen(e) {
     .addToUi();
 }
 
+//Help Menu
+function helpDialogue() {
+  var ui = SpreadsheetApp.getUi(); // Same variations.
+  var result = ui.alert(
+     'Pokemon AddOn Help',
+     'For usage help or updates please visit my GitHub page at \nhttps://github.com/tpansin/Pokemon-AddOn \nOr check out the reddit post for this at \nhttp://redd.it/367spe',
+      ui.ButtonSet.OK);
+}
+
 //Main Sprite Function
 function getPokemonSprite(dex,shiny) {
   var spreadsheet = SpreadsheetApp.getActive();
-  var url
-  url = "";
+  var url = "";
   
   //If shiny is not updated
   if (shiny == "[Shiny?]") {
     shiny = 0;
   }
   
-  //Leaves cell blank if no dex # is given
+  //Fixing Optional Parameter
+  if (shiny === undefined) {
+    shiny = 0;
+  }
+  if (typeof shiny == "string") {
+    shiny = shiny.toLowerCase();
+  }
+  
+  if (dex !== undefined && dex <= 100) {
     //Convert Dex to 00# or 0## for numbers <100
     dex = getDexString(dex);
-    if (dex == "000") {
-      //??? Sprite
-      url = "http://cdn.bulbagarden.net/upload/8/8e/Spr_3r_000.png";
-    }
-    else if (shiny != "" && shiny != "no" && shiny != "n" && shiny != "0") {
-      //Shiny Sprite URL
-      url = url.concat("http://www.serebii.net/Shiny/XY/",dex,".png");
-    }
-    else {
-      //Non Shiny Sprite URL
-      url = url.concat("http://www.serebii.net/xy/pokemon/",dex,".png");
-    }
-    return url
   }
+  
+  if (shiny != "" && shiny != "no" && shiny != "n" && shiny != "0") {
+    //Shiny Sprite URL
+    url = url.concat("http://www.serebii.net/Shiny/XY/",dex,".png");
+  }
+  else {
+    //Non Shiny Sprite URL
+    url = url.concat("http://www.serebii.net/xy/pokemon/",dex,".png");
+  }
+  return url
 }
 
 //Convert Dex to 00# or 0## for numbers <100
@@ -222,7 +235,7 @@ function lengtharray(range) {
 
 //Pokeball Sprite Buttons
 function getPokemonSpriteButton() {
-  set('=image(getPokemonSprite("Dex#","[Shiny?]"))')
+  set('=image(getPokemonSprite("Dex#","[Shiny?]"),3)')
 }
 
 function getShinyStarButton() {
@@ -409,12 +422,3 @@ function getTypeValue(value){
         return 1;
     }
 }
-
-function helpDialogue() {
-  var ui = SpreadsheetApp.getUi(); // Same variations.
-  var result = ui.alert(
-     'Pokemon AddOn Help',
-     'For usage help or updates please visit my GitHub page at \nhttps://github.com/tpansin/Pokemon-AddOn \nOr check out the reddit post for this at \nhttp://redd.it/367spe',
-      ui.ButtonSet.OK);
-}
-
