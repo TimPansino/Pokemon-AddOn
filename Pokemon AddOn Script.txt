@@ -235,7 +235,7 @@ function lengtharray(range) {
 
 //Pokeball Sprite Buttons
 function getPokemonSpriteButton() {
-  set('=image(getPokemonSprite("Dex#","[Shiny?]"),3)')
+  set('=image(getPokemonSprite("Dex#","[Shiny?]"))')
 }
 
 function getShinyStarButton() {
