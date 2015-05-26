@@ -46,6 +46,7 @@ Usage:
 Pokemon Sprites
 
     This function autofills the selected cells to return Pokemon sprites referencing 2 arguments. First, the national dex number. Second, whether or not the sprite should be shiny. If no argument is given for the second, it is assumed to be not shiny. The second argument can be as simple as 1/0, y/n, or a cell with the shiny star sprite vs an empty cell. 
+    This also supports alternate forms, using the naming scheme of serebii’s images. Simply add -m to a national dex number to get a mega evolution, or 479-w, 479-h, etc. for wash or heat rotom. 
 
 
 

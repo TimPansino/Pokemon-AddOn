@@ -88,18 +88,8 @@ function getPokemonSprite(dex,shiny) {
   }
   
   //Leaves cell blank if no dex # is given
-  if (dex !== "" && dex >= 0) {
-    
     //Convert Dex to 00# or 0## for numbers <100
     dex = getDexString(dex);
-
-    //Fixing Optional Parameter
-    if (shiny === undefined) {
-      shiny = "0"
-    }
-
-    if (typeof shiny == "string")
-      shiny = shiny.toLowerCase();
     if (dex == "000") {
       //??? Sprite
       url = "http://cdn.bulbagarden.net/upload/8/8e/Spr_3r_000.png";
