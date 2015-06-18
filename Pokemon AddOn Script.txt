@@ -4,7 +4,7 @@
 *****************************************/
 
 Version = 1.2;
-TemplateURL = "https://docs.google.com/spreadsheets/d/1ztKc6kMH0Y_FgeR2-ZDt74j8ze9lewoAliw3KWHXpKk/edit?pli=1#gid=1176449073";
+TemplateURL = "https://docs.google.com/spreadsheets/d/1ztKc6kMH0Y_FgeR2-ZDt74j8ze9lewoAliw3KWHXpKk/edit#gid=1176449073";
 
 /**************************
 **    Reddit Post Here   **
@@ -31,9 +31,8 @@ function onOpen(e) {
   var ui = SpreadsheetApp.getUi()
   ui.createMenu('Pokemon')
     .addItem('Pokemon Sprites', 'getPokemonSpriteButton')
-    .addItem('Name', 'getPokemonNameButton')
-    .addItem('Dex Number', 'getPokemonNumberButton')
-    .addSubMenu(ui.createMenu('Pokeballs')
+    .addItem('Pokeball Sprites','getPokeballSpriteButton')
+    .addSubMenu(ui.createMenu('Pokeball Menu')
       .addSubMenu(ui.createMenu('?-G')
         .addItem('? Ball Filler', 'getQuestionball')
         .addItem('Cherish Ball', 'getCherishball')
@@ -63,6 +62,8 @@ function onOpen(e) {
         .addItem('Sport Ball', 'getSportball')
         .addItem('Timer Ball', 'getTimerball')
         .addItem('Ultra Ball', 'getUltraball')))
+    .addItem('Name', 'getPokemonNameButton')
+    .addItem('Dex Number', 'getPokemonNumberButton')
     .addSubMenu(ui.createMenu('IV Autofill')
       .addItem('Physical Attacker', 'physicalIVs')
       .addItem('Special Attacker', 'specialIVs')
@@ -82,23 +83,43 @@ function onOpen(e) {
       .addItem('Pokerus', 'pokerus')
       .addItem('♂','male')
       .addItem('♀','female')
-      .addItem('○','nongender'))
+      .addItem('○','nongender')
+      .addItem('—','dash'))
     .addSeparator()
+    .addItem('Check for Updates', 'checkUpdates')
     .addItem('Settings', 'importSettings')
     .addItem('Help', 'helpDialogue')
     .addToUi();
-  
-  //Post Menu Run
-  checkUpdates()
-  importSettings()
+}
+
+function updateIndicator() {
+  var settingsTemplate = SpreadsheetApp.openByUrl(TemplateURL).getSheetByName("Settings");
+  if (Version != settingsTemplate.getRange(2,2).getValue()) {
+    return "New Update Available!"
+  }
+  else
+    return "Up to Date!"
+}
+
+function updatePrompt(indicator) {
+  if (indicator == "New Update Available!")
+    return "To Update: Install the newest Script from the GitHub Link, then refresh and hit the Settings button in the Menu."
+  else 
+    return ""
+}
+
+function version() {
+  return Version
 }
 
 function checkUpdates() {
   //Open Template
+  var ui = SpreadsheetApp.getUi()
   var settingsTemplate = SpreadsheetApp.openByUrl(TemplateURL).getSheetByName("Settings");
   if (Version != settingsTemplate.getRange(2,2).getValue()) {
     ui.alert("New Update Available!","A new update has been release for this AddOn, download it now at\nhttps://github.com/tpansin/Pokemon-AddOn \nAnd read the changelog at\nhttp://redd.it/367spe",ui.ButtonSet.OK);
   }
+  importSettings()
 }
 
 function importSettings() {
@@ -120,7 +141,7 @@ function importSettings() {
     SettingsPage.setActiveRange(SettingsPage.getRange(3,1));
     ui.alert("Welcome to Galironxero's Spreadsheet AddOn!","A new page called Settings with options to configure this AddOn was installed. This sheet can be hidden by right clicking it. \n\nTo get started using it, check out the new menu and see what's available!",ui.ButtonSet.OK);
   }
-  else if (Version == newVersion && SettingsPage.getRange(2,2).getValue() != Version) {
+  else if (SettingsPage.getRange(2,2).getValue() != newVersion) {
     ss.deleteSheet(SettingsPage)
     var failed = ss.getSheetByName("Copy of Settings");
     if (failed !== null) {
@@ -140,8 +161,8 @@ function readSettings() {
   var SettingsPage = ss.getSheetByName("Settings");
   if (SettingsPage === null)
     return [1,1];
-  var pokemonChoice = SettingsPage.getRange(4,4).getValue();
-  var ballChoice = SettingsPage.getRange(9,4).getValue();
+  var pokemonChoice = SettingsPage.getRange(5,4).getValue();
+  var ballChoice = SettingsPage.getRange(10,4).getValue();
   var output = [pokemonChoice, ballChoice];
   
   for (i in output) {
@@ -387,6 +408,11 @@ function getPokemonSpriteButton() {
   set('=image(getPokemonSprite("Dex#","[Shiny?]"))')
 }
 
+getPokeballSpriteButton
+function getPokeballSpriteButton() {
+  set('=image(getPokeballSprite("Ball"))')
+}
+
 function getShinyStarButton() {
   set('=image("http://cdn.bulbagarden.net/upload/2/27/ShinyVIStar.png",3)')
 }
@@ -405,6 +431,10 @@ function female() {
 
 function nongender() {
   set('="○"')
+}
+
+function dash() {
+  set('="—"')
 }
 
 function getHiddenPowerButton() {
@@ -527,6 +557,8 @@ function getSportball() {
 
 //Standard Pokeballs
 var standardBallDict = { 
+  "-":"http://fc03.deviantart.net/fs70/i/2011/068/a/c/pokeball_desktop_icon_by_beccerberry-d3b98cf.png",
+  "—":"http://fc03.deviantart.net/fs70/i/2011/068/a/c/pokeball_desktop_icon_by_beccerberry-d3b98cf.png",
   "?":"http://fc03.deviantart.net/fs70/i/2011/068/a/c/pokeball_desktop_icon_by_beccerberry-d3b98cf.png",
   "any":"http://fc03.deviantart.net/fs70/i/2011/068/a/c/pokeball_desktop_icon_by_beccerberry-d3b98cf.png",
   "poke":"http://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png",
