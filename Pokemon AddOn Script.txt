@@ -81,6 +81,12 @@ function onOpen(e) {
     .addSubMenu(ui.createMenu('Symbols')
       .addItem('Shiny Star', 'getShinyStarButton')
       .addItem('Pokerus', 'pokerus')
+      .addItem('● HP','hitpoint')
+      .addItem('▲ Atk','attack')
+      .addItem('■ Def','defense')
+      .addItem('♥ SpA','speca')
+      .addItem('★ SpD','sspecd)
+      .addItem('◆ Spe','speed')
       .addItem('♂','male')
       .addItem('♀','female')
       .addItem('○','nongender')
@@ -419,6 +425,33 @@ function getShinyStarButton() {
 
 function pokerus() {
   set('=image("http://cdn.bulbagarden.net/upload/2/2f/Pok%C3%A9rusIC_V_cured.png")')
+}
+
+function hitpoint() {
+  set('="●"')
+}
+
+function attack() {
+  set('="▲"')
+}
+
+
+function defense() {
+  set('="■"')
+}
+
+
+function speca() {
+  set('="♥"')
+}
+
+
+function specd() {
+  set('="★"')
+}
+
+function speed() {
+  set('="◆"')
 }
 
 function male() {
