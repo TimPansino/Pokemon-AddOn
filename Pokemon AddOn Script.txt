@@ -3,7 +3,7 @@
 **            Add On Scripts            **
 *****************************************/
 
-Version = 1.2;
+Version = 1.3;
 TemplateURL = "https://docs.google.com/spreadsheets/d/1ztKc6kMH0Y_FgeR2-ZDt74j8ze9lewoAliw3KWHXpKk/edit#gid=1176449073";
 
 /**************************
@@ -73,7 +73,6 @@ function onOpen(e) {
       .addItem('Special Attacker [0 Spe]', 'special0speIVs')
       .addItem('Mixed Attacker [0 Spe]', 'mixed0speIVs'))
     .addSubMenu(ui.createMenu('EV Autofill')
-      .addItem('Quick Ball', 'getQuickball')
       .addSubMenu(ui.createMenu('Physical Attacker')
         .addItem('6 HP', 'physicalEVsHP')))
     .addItem('Hidden Power', 'getHiddenPowerButton')
@@ -85,7 +84,7 @@ function onOpen(e) {
       .addItem('▲ Atk','attack')
       .addItem('■ Def','defense')
       .addItem('♥ SpA','speca')
-      .addItem('★ SpD','sspecd)
+      .addItem('★ SpD','specd')
       .addItem('◆ Spe','speed')
       .addItem('♂','male')
       .addItem('♀','female')
