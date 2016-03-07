@@ -74,7 +74,13 @@ function onOpen(e) {
       .addItem('Mixed Attacker [0 Spe]', 'mixed0speIVs'))
     .addSubMenu(ui.createMenu('EV Autofill')
       .addSubMenu(ui.createMenu('Physical Attacker')
-        .addItem('6 HP', 'physicalEVsHP')))
+        .addItem('6 HP', 'physicalEVsHP')
+        .addItem('6 Def', 'physicalEVsDEF')
+        .addItem('6 SpD', 'physicalEVsSPD'))
+      .addSubMenu(ui.createMenu('Special Attacker')
+        .addItem('6 HP', 'specialEVsHP')
+        .addItem('6 Def', 'specialEVsDEF')
+        .addItem('6 SpD', 'specialEVsSPD')))
     .addItem('Hidden Power', 'getHiddenPowerButton')
     .addItem('Hyperlink', 'hyperlink')
     .addSubMenu(ui.createMenu('Symbols')
@@ -319,7 +325,7 @@ function getPokeballSprite(ball) {
 
 //Easy Hyperlinking Autofill
 function hyperlink() {
-  set('=HYPERLINK("www.reddit.com","Text")')
+  set('=HYPERLINK("","Link")')
 }
 
 //Formula Box Set (Simplified)
