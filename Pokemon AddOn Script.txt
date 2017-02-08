@@ -95,7 +95,8 @@ function onOpen(e) {
       .addItem('♂','male')
       .addItem('♀','female')
       .addItem('○','nongender')
-      .addItem('—','dash'))
+      .addItem('—','dash')
+      .addItem('SR Label','setSRText'))
     .addSeparator()
     .addItem('Check for Updates', 'checkUpdates')
     .addItem('Settings', 'importSettings')
@@ -325,7 +326,18 @@ function getPokeballSprite(ball) {
 
 //Easy Hyperlinking Autofill
 function hyperlink() {
-  set('=HYPERLINK("","Link")')
+  var ui = SpreadsheetApp.getUi();
+  var result = ui.prompt(
+      'Type\/Paste your Hyperlink in the box below',
+      ui.ButtonSet.OK_CANCEL);
+  // Process the user's response.
+  var button = result.getSelectedButton();
+  var text = result.getResponseText();
+  // User clicked "OK"; fill the input into the url 
+  // parameter of the HYPERLINK function
+  if (button == ui.Button.OK) {
+    set('=HYPERLINK("'+ text + '","Link")')
+  }
 }
 
 //Formula Box Set (Simplified)
@@ -473,6 +485,10 @@ function nongender() {
 
 function dash() {
   set('="—"')
+}
+
+function setSRText() {
+  set('="SR"')
 }
 
 function getHiddenPowerButton() {
