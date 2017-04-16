@@ -894,6 +894,8 @@ var formdict = {
   "savanna":"sa",
   "ocean":"o",
   "jungle":"j",
+  "fancy":"f",
+  "pokeball":"pb",
   "libre":"l",
   "ph.d.":"phd",
   "rock star":"r",
