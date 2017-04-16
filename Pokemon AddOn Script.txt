@@ -238,6 +238,9 @@ function getPokemonSprite(dex,shiny,f) {
         if (f == "sky") {
           f = "flying"
         }
+        else {
+          f = formdict[f];
+        }
       }
       else {
         f = formdict[f];
