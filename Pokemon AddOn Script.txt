@@ -201,9 +201,9 @@ function getPokemonSprite(dex,shiny) {
   var spreadsheet = SpreadsheetApp.getActive();
   
   //URL Work
-  var standard = ["http://www.serebii.net/xy/pokemon/", "http://www.serebii.net/Shiny/XY/", ".png"]
+  var standard = ["http://www.serebii.net/sunmoon/pokemon/", "http://www.serebii.net/Shiny/SM/", ".png"]
   var trozei = ["http://www.serebii.net/battletrozei/pokemon/", ".png"]
-  var mini = ["http://www.serebii.net/pokedex-xy/icon/", ".png"]
+  var mini = ["http://www.serebii.net/pokedex-sm/icon/", ".png"]
   var url = "";
   
   //Retrieve Settings
